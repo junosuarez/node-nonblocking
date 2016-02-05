@@ -1,0 +1,31 @@
+{
+  "name": "nonblocking",
+  "author": "jden <me@jden.us>",
+  "version": "1.0.0",
+  "description": "asynchronous Array.prototype functions that won't block on large arrays",
+  "keywords": [
+    "array",
+    "async",
+    "asynchronous",
+    "fast",
+    "non-blocking",
+    "nonblock",
+    "unblocked",
+    "yield",
+    "yielding",
+    "cooperative",
+    "preemptable"
+  ],
+  "main": "index.js",
+  "scripts": {
+    "pretest": "standard",
+    "test": "mocha"
+  },
+  "repository": "git@github.com:jden/node-nonblocking.git",
+  "license": "ISC",
+  "readmeFilename": "README.md",
+  "devDependencies": {
+    "mochi": "^0.3.0",
+    "standard": "^5.4.1"
+  }
+}
