@@ -42,7 +42,6 @@ to rise, `nonblocking` might help you!
 [1]: https://www.npmjs.com/package/async
 [2]: https://www.npmjs.com/package/event-loop-lag
 
-
 ## api
 
 In brief, call any of `filter`, `forEach`, `some`, `every`, or `map`, passing the array as the first arugment, and a Node.js-style callback as the last.
@@ -51,7 +50,9 @@ The methods are also available in a fluent syntax like lodash or underscore. Use
 
 Using [jsig](https://github.com/jsigbiz/spec) annotation.
 
-### `forEach(arr: Array, fn: Function) => Callback<>`
+**`filter` and `forEach` also accept Dictionary objects.** Other functions may support operating on Dictionaries in the future
+
+### `forEach(arr: Array | Dictionary, fn: Function) => Callback<>`
 
 The final callback parameter is optional.
 
@@ -70,10 +71,18 @@ nonblocking([1, 2, 3]).forEach(function (x) {
 }, function (err) {
   // logged: 1\n2\n3
 })
+
+// Dictionary usage
+
+nonblocking({a: 1, b: 2, c: 3}).forEach(function (val, key) {
+  console.log(key, val)
+}, function (err) {
+  // logged: "a" 1\n"b" 2\n"c" 3
+})
 ```
 
 
-### `filter(arr: Array, fn: Predicate) => Callback<Array>`
+### `filter(arr: Array | Dictionary, fn: Predicate) => Callback<Array>`
 
 e.g.
 ```js
@@ -85,6 +94,12 @@ nonblocking.filter([1, 2, 3], function (x) { return x >= 2 }, function (err, out
 
 nonblocking([1, 2, 3]).filter(function (x) { return x >= 2 }, function (err, out) {
   // out = [2, 3]
+})
+
+// Dictionary usage
+
+nonblocking({a: 1, b: 2, c: 3]).filter(function (val, key) { return val >= 2 }, function (err, out) {
+  // out = {b: 2, c: 3}
 })
 ```
 

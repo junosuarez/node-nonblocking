@@ -48,9 +48,9 @@ describe('nonblocking', function () {
       })
     })
     it('throws on error if there is no callback', function () {
-      function boom () {
-        throw new Error('oops')
-      }
+      // function boom () {
+      //   throw new Error('oops')
+      // }
 
       // I'm not sure how to test for an uncaught exception
       // from within mocha...
@@ -70,12 +70,25 @@ describe('nonblocking', function () {
     it('iterates over every item in array', function (done) {
       var i = 0
       var seen = []
-      n.forEach(function (e) {
+      var seenKeys = []
+      n.forEach(function (v, k) {
         i++
-        seen.push(e)
+        seen.push(v)
+        seenKeys.push(k)
       }, function (err) {
         expect(i).to.equal(arr.length)
         expect(seen).to.deep.equal(arr)
+        expect(seenKeys).to.deep.equal(Object.keys(arr).map(Number))
+        done(err)
+      })
+    })
+    it('iterates over every property in an object', function (done) {
+      var seen = {}
+      var obj = {1: 'one', 2: 'two', 3: 'three'}
+      nonblocking(obj).forEach(function (val, key) {
+        seen[key] = val
+      }, function (err) {
+        expect(seen).to.deep.equal(obj)
         done(err)
       })
     })
@@ -109,6 +122,17 @@ describe('nonblocking', function () {
       n.filter(even, function (err, out) {
         expect(out)
           .to.deep.equal(arr.filter(even))
+        done(err)
+      })
+    })
+    it('can filter an object collection', function (done) {
+      function notNullOrUndefined (v, k) {
+        return !(v === undefined || v === null)
+      }
+      var obj = {1: 'one', 2: null, 3: 'three', 4: undefined}
+      var expected = {1: 'one', 3: 'three'}
+      nonblocking.filter(obj, notNullOrUndefined, function (err, out) {
+        expect(out).to.deep.equal(expected)
         done(err)
       })
     })

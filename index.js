@@ -53,10 +53,15 @@ function tryFn1 (fn, arg, err) {
 }
 
 function filter (arr, fn, cb) {
-  var out = []
-  forEach(arr, function (e) {
-    if (fn(e)) {
-      out.push(e)
+  var isArray = Array.isArray(arr)
+  var out = isArray ? [] : {}
+  forEach(arr, function (v, k) {
+    if (fn(v, k)) {
+      if (isArray) {
+        out.push(v)
+      } else {
+        out[k] = v
+      }
     }
   }, function (err) {
     cb(err, out)
@@ -64,9 +69,17 @@ function filter (arr, fn, cb) {
 }
 
 function forEach (arr, fn, cb) {
-  iter(0, arr.length, function (i) {
-    fn(arr[i])
-  }, cb)
+  if (Array.isArray(arr)) {
+    iter(0, arr.length, function (i) {
+      fn(arr[i], i)
+    }, cb)
+  } else {
+    var keys = Object.keys(arr)
+    iter(0, keys.length, function (i) {
+      var k = keys[i]
+      fn(arr[k], k)
+    }, cb)
+  }
 }
 
 function some (arr, fn, cb) {
