@@ -1,7 +1,7 @@
 {
   "name": "nonblocking",
   "author": "jden <me@jden.us>",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "asynchronous Array.prototype functions that won't block on large arrays",
   "keywords": [
     "array",
