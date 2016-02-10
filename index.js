@@ -14,20 +14,29 @@ function nonblocking (arr) {
   }
 }
 
-function iter (i, limit, fn, end) {
-  var stop = false
+function iter (i, limit, fn, end, stop) {
+  stop = stop || false
   var err = {}
   setImmediate(function () {
+    if (stop || i >= limit) {
+      if (typeof end === 'function') {
+        end()
+      }
+      return
+    }
+
     // yield i, increment i, and check for stop
     stop = iter.STOP === tryFn1(fn, i++, err)
     if (err.err) {
-      return end(err.err)
+      if (end) {
+        return end(err.err)
+      } else {
+        // in new call stack, will not be caught
+        throw err.err
+      }
     }
-    if (!stop && i < limit) {
-      iter(i, limit, fn, end)
-    } else if (typeof end === 'function') {
-      setImmediate(end)
-    }
+
+    iter(i, limit, fn, end, stop)
   })
 }
 iter.STOP = Object.create(null)

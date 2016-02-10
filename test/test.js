@@ -47,6 +47,23 @@ describe('nonblocking', function () {
         done()
       })
     })
+    it('throws on error if there is no callback', function () {
+      function boom () {
+        throw new Error('oops')
+      }
+
+      // I'm not sure how to test for an uncaught exception
+      // from within mocha...
+
+      // expect(function () {
+        // nonblocking.iter(1, 100, boom)
+      // }).to.throw(Error)
+    })
+    it('does not call the fn if iterating 0 to 0', function (done) {
+      nonblocking.iter(0, 0, function () {
+        throw new Error('should not be called')
+      }, done)
+    })
   })
 
   describe('forEach', function () {
@@ -61,6 +78,26 @@ describe('nonblocking', function () {
         expect(seen).to.deep.equal(arr)
         done(err)
       })
+    })
+    it('does not require a callback', function (done) {
+      var i = 0
+      var seen = []
+      n.forEach(function (e) {
+        i++
+        seen.push(e)
+        check()
+      })
+      function check () {
+        if (i === 10) {
+          expect(seen).to.deep.equal(arr)
+          done()
+        }
+      }
+    })
+    it('does not call the fn on an empty array', function (done) {
+      nonblocking.forEach([], function () {
+        throw new Error('should not be called')
+      }, done)
     })
   })
 
