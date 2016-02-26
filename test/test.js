@@ -88,6 +88,7 @@ describe('nonblocking', function () {
       nonblocking(obj).forEach(function (val, key) {
         seen[key] = val
       }, function (err) {
+        expect(err).to.equal(undefined)
         expect(seen).to.deep.equal(obj)
         done(err)
       })
@@ -111,6 +112,22 @@ describe('nonblocking', function () {
       nonblocking.forEach([], function () {
         throw new Error('should not be called')
       }, done)
+    })
+    it('does not call the fn if object key is deleted', function (done) {
+      var obj = {a: 1, b: 2}
+      nonblocking.forEach(obj, function () {
+        throw new Error('should not be called')
+      }, done)
+      delete obj.a
+      delete obj.b
+    })
+    it('does not call the fn if array el is deleted', function (done) {
+      var obj = ['a', 'b']
+      nonblocking.filter(obj, function () {
+        throw new Error('should not be called')
+      }, done)
+      obj.pop()
+      obj.pop()
     })
   })
 

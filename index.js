@@ -71,13 +71,17 @@ function filter (arr, fn, cb) {
 function forEach (arr, fn, cb) {
   if (Array.isArray(arr)) {
     iter(0, arr.length, function (i) {
-      fn(arr[i], i)
+      if (i in arr) {
+        fn(arr[i], i)
+      }
     }, cb)
   } else {
     var keys = Object.keys(arr)
     iter(0, keys.length, function (i) {
       var k = keys[i]
-      fn(arr[k], k)
+      if (k in arr) {
+        fn(arr[k], k)
+      }
     }, cb)
   }
 }
